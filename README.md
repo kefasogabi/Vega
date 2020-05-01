@@ -1,1 +1,1 @@
-A sample vehicle dealer app built with Angular, ASP.NET Core and Entity Framework Core. This is a my course: "Build a Real-world App with ASP.NET Core and Angular". 
+A sample vehicle dealer app built with Angular, ASP.NET Core and Entity Framework Core. This is a Udemy course by Mosh Hamedani that i followed to build this project: "Build a Real-world App with ASP.NET Core and Angular". 
