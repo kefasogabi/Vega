@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using vega.Controllers.Resources;
@@ -25,6 +28,11 @@ namespace vega.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
+
+            StringBuilder sbvehicle = new StringBuilder();
+            var xss = 
+            sbvehicle.Append(HttpUtility.HtmlEncode(vehicleResource.Contact.Name));
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -88,6 +96,15 @@ namespace vega.Controllers
             var vehicleResource = mapper.Map<Vehicle, VehicleResource>(vehicle);
 
             return Ok(vehicleResource);
+        }
+
+        [HttpGet]
+        public async Task<QueryResultResource<VehicleResource>> GetVehicles(VehicleQueryResource queryObj)
+        {
+            var query = mapper.Map<VehicleQueryResource, VehicleQuery>(queryObj);
+            var queryResult = await repository.GetVehicles(query);
+
+            return mapper.Map<QueryResult<Vehicle>, QueryResultResource<VehicleResource>>(queryResult);
         }
     }
 }

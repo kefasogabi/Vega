@@ -1,6 +1,7 @@
 import { ErrorHandler, Inject, NgZone, Injector } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Response } from "@angular/http";
+import { HttpErrorResponse } from "@angular/common/http";
 
 export class AppErrorHandler implements ErrorHandler{
 
@@ -12,21 +13,13 @@ export class AppErrorHandler implements ErrorHandler{
 
     public handleError(error: any): void {
         this.ngZone.run(() => {
-            let errorTitle = 'Error';
-            let errMsg = 'An unexpected error ocurred';
-
-            if (error instanceof Response) {
-                const contentType = error.headers.get("Content-Type")
-
-                if (contentType && contentType == "application/json") {
-                    const body = error.json();
-                    errorTitle = body.message || errorTitle;
-                    errMsg = body.detailedMessage || JSON.stringify(body);
-                } else {
-                    errMsg = error.text();
-                }
-            }
-            this.toastr.error(errMsg, errorTitle);
+            if (error instanceof HttpErrorResponse) {
+                //Backend returns unsuccessful response codes such as 404, 500 etc.				  
+                this.toastr.error(error.message, String(error.status))         	  
+            } else {
+                //A client-side or network error occurred.	          
+                this.toastr.error(error.message, "Error");          
+            }   
         });
 
     }   

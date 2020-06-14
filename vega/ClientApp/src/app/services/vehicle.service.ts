@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class VehicleService {
+private readonly vehiclesEndpoint = '/api/vehicles/';
 
   constructor(private http:HttpClient) { }
 
@@ -16,15 +17,33 @@ export class VehicleService {
   }
 
   create(vehicle:SaveVehicle){
-    return this.http.post('/api/vehicles', vehicle);
+    return this.http.post(this.vehiclesEndpoint, vehicle);
   }
 
   getVehicle(id){
-    return this.http.get('/api/vehicles/' + id);
+    return this.http.get(this.vehiclesEndpoint + id);
+  }
+
+  getVehicles(filter){
+    return this.http.get(this.vehiclesEndpoint + '?' + this.toQueryString(filter))
+  }
+
+  toQueryString(obj){
+    var parts = [];
+
+        for(var  property in obj){
+        var value = obj[property];
+        if(value != null && value != undefined)
+
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+      }
+    
+      return parts.join('&');
+    
   }
 
   updateVehicle(vehicle:SaveVehicle){
-    return this.http.put('/api/vehicles/' + vehicle.id, vehicle);
+    return this.http.put(this.vehiclesEndpoint + vehicle.id, vehicle);
   }
 
   delete(id) {
